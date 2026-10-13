@@ -5,6 +5,8 @@ export type TProductCardProps = {
   description: string;
   href: string;
   icon?: ReactNode;
+  imageSrc?: string;
+  imageAlt?: string;
   visual?: ReactNode;
   features?: string[];
   linkText?: string;

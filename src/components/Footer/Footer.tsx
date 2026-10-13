@@ -11,14 +11,13 @@ export function Footer({ className }: TFooterProps): JSX.Element {
     <footer className={`site-footer ${className || ""}`}>
       <div className="wrap footer-grid">
         <div className="footer-brand">
-          <span className="nav-logo">
-            <Image
-              alt="نشان اعتماد دانه شیر کوه"
-              height={34}
-              src="/logo.png"
-              width={34}
-            />
-          </span>
+          <Image
+            alt="نشان اعتماد دانه شیر کوه"
+            className="footer-logo-img"
+            height={64}
+            src="/logo.png"
+            width={90}
+          />
           <div>
             <h4>اعتماد دانه شیر کوه</h4>
             <p>یزد، شهرک صنعتی یزد مهر</p>
@@ -50,10 +49,7 @@ export function Footer({ className }: TFooterProps): JSX.Element {
             </svg>
             <span className="ltr">0913 458 8060</span>
           </a>
-          <a
-            className="footer-contact-link"
-            href="mailto:etemaddane@gmail.com"
-          >
+          <a className="footer-contact-link" href="mailto:etemaddane@gmail.com">
             <svg
               fill="none"
               height="15"

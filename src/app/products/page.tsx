@@ -1,15 +1,51 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 
 import CtaBand from "@/components/CtaBand";
 import ProductCard from "@/components/ProductCard";
-import ProductVisual from "@/components/ProductVisual";
 
 export const metadata: Metadata = {
   title: "محصولات",
-  description:
-    "محصولات اعتماد دانه — خوراک باکیفیت دام سنگین و سبک، و خوراک پرورشی طیور",
+  description: "محصولات اعتماد دانه — خوراک باکیفیت دام سنگین و سبک، و خوراک پرورشی طیور",
 };
+
+const PRODUCTS = [
+  {
+    title: "خوراک گاو",
+    description: "فرمول متعادل برای رشد، شیر و سلامت دام سنگین",
+    href: "/product-cow",
+    imageSrc: "/images/product-cow.jpg",
+  },
+  {
+    title: "خوراک گوسفند",
+    description: "تغذیه علمی برای گله‌های سبک و بازدهی بهتر",
+    href: "/products",
+    imageSrc: "/images/product-sheep.jpg",
+  },
+  {
+    title: "خوراک طیور",
+    description: "رشد یکنواخت و سلامت گله‌های مرغ و طیور",
+    href: "/product-poultry",
+    imageSrc: "/images/product-poultry.jpg",
+  },
+  {
+    title: "خوراک آبزیان",
+    description: "فرمول‌های مناسب پرورش ماهی و آبزیان",
+    href: "/products",
+    imageSrc: "/images/product-fish.jpg",
+  },
+  {
+    title: "خوراک حیوانات خانگی",
+    description: "تغذیه کامل برای سگ و گربه با مواد مغذی",
+    href: "/products",
+    imageSrc: "/images/product-pets.jpg",
+  },
+  {
+    title: "خوراک شتر",
+    description: "ترکیب تخصصی متناسب با نیاز دام شتر",
+    href: "/products",
+    imageSrc: "/images/product-camel.jpg",
+  },
+] as const;
 
 /**
  * صفحه لیست محصولات
@@ -21,41 +57,23 @@ export default function ProductsPage(): JSX.Element {
         <div className="wrap">
           <p className="eyebrow">محصولات</p>
           <h1>خوراک دام و طیور</h1>
-          <p>
-            دو دسته اصلی محصولات اعتماد دانه، با فرمول‌بندی متعادل و مواد اولیه
-            باکیفیت
-          </p>
+          <p>مجموعه محصولات اعتماد دانه با فرمولاسیون علمی و مواد اولیه باکیفیت</p>
         </div>
       </section>
 
       <section style={{ paddingTop: 0 }}>
         <div className="wrap">
-          <div className="product-grid">
-            <ProductCard
-              description="خوراک متعادل برای دام سنگین و سبک، با هدف رشد بهتر و حفظ سلامت گله."
-              href="/product-cow"
-              style={{ flexBasis: "340px" }}
-              title="خوراک دام"
-              visual={<ProductVisual type="cow" />}
-              features={[
-                "مناسب دوره‌های مختلف رشد و شیردهی",
-                "فرمول‌بندی بر پایه نیاز تغذیه‌ای دام",
-                "مواد اولیه با کنترل کیفیت",
-              ]}
-            />
-
-            <ProductCard
-              description="خوراک متعادل برای رشد یکنواخت و سلامت گله‌های طیور صنعتی و خانگی."
-              href="/product-poultry"
-              style={{ flexBasis: "340px" }}
-              title="خوراک طیور"
-              visual={<ProductVisual type="poultry" />}
-              features={[
-                "مناسب دوره‌های پرورش و تخم‌گذاری",
-                "دانه‌بندی مناسب برای مصرف بهتر",
-                "مواد اولیه با کنترل کیفیت",
-              ]}
-            />
+          <div className="product-grid product-grid-6">
+            {PRODUCTS.map((product) => (
+              <ProductCard
+                key={product.title}
+                description={product.description}
+                href={product.href}
+                imageAlt={product.title}
+                imageSrc={product.imageSrc}
+                title={product.title}
+              />
+            ))}
           </div>
         </div>
       </section>
@@ -82,21 +100,14 @@ export default function ProductsPage(): JSX.Element {
                   </svg>
                   تماس بگیرید
                 </a>
-                <Link className="btn btn-ghost" href="/contact">
-                  <svg
-                    fill="none"
-                    height="16"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
-                    width="16"
-                  >
-                    <path d="M9 18l6-6-6-6" />
-                  </svg>
-                  راه‌های ارتباطی
-                </Link>
+                <a
+                  className="btn btn-ghost"
+                  href="https://instagram.com/etemaddane"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  اینستاگرام
+                </a>
               </>
             }
           />

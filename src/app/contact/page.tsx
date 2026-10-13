@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 
 import ContactRow from "@/components/ContactRow";
 
 export const metadata: Metadata = {
   title: "تماس با ما",
-  description:
-    "راه‌های ارتباطی با اعتماد دانه شیر کوه — تلفن، ایمیل، آدرس کارخانه و اینستاگرام",
+  description: "راه‌های ارتباطی با اعتماد دانه شیر کوه — تلفن، ایمیل، آدرس کارخانه و اینستاگرام",
 };
 
 /**
@@ -14,10 +14,15 @@ export const metadata: Metadata = {
 export default function ContactPage(): JSX.Element {
   return (
     <>
-      <section className="page-hero">
-        <div className="wrap">
-          <p className="eyebrow">تماس با ما</p>
+      <section className="detail-hero">
+        <div className="detail-hero-media">
+          <Image fill priority alt="" sizes="100vw" src="/images/hero-factory.jpg" />
+          <div className="detail-hero-overlay" />
+        </div>
+        <div className="wrap detail-hero-inner">
+          <p className="section-tag">تماس با ما</p>
           <h1>راه‌های ارتباطی</h1>
+          <p>آماده پاسخگویی به سوالات و سفارش‌های شما هستیم</p>
         </div>
       </section>
 
@@ -44,7 +49,6 @@ export default function ContactPage(): JSX.Element {
                 </svg>
               }
             />
-
             <ContactRow
               isLtr
               href="mailto:etemaddane@gmail.com"
@@ -66,9 +70,27 @@ export default function ContactPage(): JSX.Element {
                 </svg>
               }
             />
-
             <ContactRow
-              external
+              href="https://maps.google.com/?q=شهرک+صنعتی+یزد+مهر"
+              label="آدرس"
+              value="یزد، شهرک صنعتی یزد مهر"
+              icon={
+                <svg
+                  fill="none"
+                  height="19"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                  width="19"
+                >
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                  <circle cx="12" cy="10" r="3" />
+                </svg>
+              }
+            />
+            <ContactRow
               isLtr
               href="https://instagram.com/etemaddane"
               label="اینستاگرام"
@@ -87,28 +109,6 @@ export default function ContactPage(): JSX.Element {
                   <rect height="20" rx="5" width="20" x="2" y="2" />
                   <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
                   <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
-                </svg>
-              }
-            />
-
-            <ContactRow
-              external
-              href="https://www.google.com/maps/search/?api=1&query=%D8%B4%D9%87%D8%B1%DA%A9%20%D8%B5%D9%86%D8%B9%D8%AA%DB%8C%20%DB%8C%D8%B2%D8%AF%20%D9%85%D9%87%D8%B1"
-              label="آدرس"
-              value="یزد، شهرک صنعتی یزد مهر"
-              icon={
-                <svg
-                  fill="none"
-                  height="19"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                  width="19"
-                >
-                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                  <circle cx="12" cy="10" r="3" />
                 </svg>
               }
             />
