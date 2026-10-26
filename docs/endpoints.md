@@ -1,17 +1,32 @@
 # Endpoints (`src/endpoints/`)
 
-هر resource یک پوشه دارد. عملیات HTTP معمولاً در زیرپوشه متد:
+الگوی ساختاری مشابه پروژه AVL: هر resource یک پوشه دارد و عملیات HTTP در زیرپوشه متد قرار می‌گیرد.
 
 ```
-Auth/
-└── Logout/
-    └── GetAuthLogout.ts
+Site/
+├── Site.type.ts
+├── index.ts
+└── Get/
+    ├── GetSiteContent.ts
+    └── GetSiteContent.type.ts
 
-User/
-└── Address/
-    ├── PostUserAddress.ts
-    ├── Types.ts
-    └── ...
+Catalog/
+├── Catalog.type.ts
+├── index.ts
+├── Categories/
+│   ├── index.ts
+│   └── Get/GetCatalogCategories.ts
+└── Products/
+    ├── index.ts
+    ├── Get/GetCatalogProducts.ts
+    └── {slug}/Get/GetCatalogProduct.ts
+
+Inquiries/
+├── Inquiries.type.ts
+├── index.ts
+└── Post/
+    ├── PostInquiry.ts
+    └── PostInquiry.type.ts
 ```
 
 ## الگوی endpoint
@@ -19,11 +34,27 @@ User/
 ```typescript
 import { AXIOS } from "@/utils/axiosInstance";
 
-export async function GetAuthLogout(): Promise<null> {
-  const { data } = await AXIOS.get("/auth/logout/");
+import type { TGetSiteContentResponse } from "./GetSiteContent.type";
+
+async function GetSiteContent(): Promise<TGetSiteContentResponse> {
+  const { data } = await AXIOS.get("/site/");
   return data;
 }
+
+export default GetSiteContent;
 ```
 
 - **هرگز** axios مستقیم یا `fetch` خام برای API پروژه — از `@/utils/axiosInstance` (`AXIOS`)
-- خطاهای API معمولاً در interceptor با toast نمایش داده می‌شوند
+- تابع را `default export` کن و از `index.ts` با named export باز-export کن
+- typeهای request/response کنار همان فایل (`*.type.ts`)
+- Base URL از `NEXT_PUBLIC_API_URL` (`getAPIUrl`)
+
+## APIهای فعلی
+
+| تابع | متد | مسیر |
+|------|-----|------|
+| `GetSiteContent` | GET | `/site/` |
+| `GetCatalogCategories` | GET | `/catalog/categories/` |
+| `GetCatalogProducts` | GET | `/catalog/products/` |
+| `GetCatalogProduct` | GET | `/catalog/products/{slug}/` |
+| `PostInquiry` | POST | `/inquiries/` |

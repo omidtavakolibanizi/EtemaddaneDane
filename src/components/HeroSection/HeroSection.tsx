@@ -93,34 +93,37 @@ const FEATURES = [
 /**
  * بخش هیرو صفحه اصلی با اسلایدر و CTA
  */
-export function HeroSection({ className }: THeroSectionProps): JSX.Element {
+export function HeroSection({ className, slides }: THeroSectionProps): JSX.Element {
+  /* Const */
+  const slideItems = slides?.length ? slides : SLIDES;
+
   /* States */
   const [active, setActive] = useState(0);
 
   /* Effects */
   useEffect(() => {
     const timer = window.setInterval(() => {
-      setActive((prev) => (prev + 1) % SLIDES.length);
+      setActive((prev) => (prev + 1) % slideItems.length);
     }, 5500);
 
     return () => window.clearInterval(timer);
-  }, []);
+  }, [slideItems.length]);
 
   /* Const */
-  const slide = SLIDES[active];
+  const slide = slideItems[active] || slideItems[0];
 
   return (
     <section className={`home-hero ${className || ""}`}>
       <div className="home-hero-media">
-        {SLIDES.map((item, index) => (
+        {slideItems.map((item, index) => (
           <div
-            key={item.image}
+            key={`${item.image}-${index}`}
             aria-hidden={index !== active}
             className={`home-hero-slide ${index === active ? "is-active" : ""}`}
           >
             <Image
               fill
-              alt={item.alt}
+              alt={item.alt || item.title}
               className="home-hero-image"
               priority={index === 0}
               sizes="100vw"
@@ -134,7 +137,7 @@ export function HeroSection({ className }: THeroSectionProps): JSX.Element {
       <div className="wrap home-hero-content">
         <div key={active} className="home-hero-copy">
           <h1 className="home-hero-title">{slide.title}</h1>
-          <p className="home-hero-sub">{slide.subtitle}</p>
+          {slide.subtitle ? <p className="home-hero-sub">{slide.subtitle}</p> : null}
           <div className="home-hero-actions">
             <Link className="btn btn-primary" href="/about">
               درباره ما بیشتر بدانید
@@ -171,9 +174,9 @@ export function HeroSection({ className }: THeroSectionProps): JSX.Element {
 
         <div className="home-hero-side">
           <div aria-label="اسلایدهای هیرو" className="home-hero-dots">
-            {SLIDES.map((item, index) => (
+            {slideItems.map((item, index) => (
               <button
-                key={item.image}
+                key={`${item.image}-dot-${index}`}
                 aria-current={index === active ? "true" : undefined}
                 aria-label={`اسلاید ${index + 1}`}
                 className={index === active ? "is-active" : undefined}

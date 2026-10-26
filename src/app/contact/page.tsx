@@ -1,17 +1,35 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import { Suspense } from "react";
+
+import { GetSiteContent } from "@/endpoints/Site";
+import {
+  formatPhoneDisplay,
+  formatPhoneTel,
+  instagramHandle,
+} from "@/utils/formatPhone";
+import { safeApi } from "@/utils/safeApi";
 
 import ContactRow from "@/components/ContactRow";
+import InquiryForm from "@/components/InquiryForm";
 
 export const metadata: Metadata = {
   title: "تماس با ما",
   description: "راه‌های ارتباطی با اعتماد دانه شیر کوه — تلفن، ایمیل، آدرس کارخانه و اینستاگرام",
 };
 
-/**
- * صفحه تماس با ما
- */
-export default function ContactPage(): JSX.Element {
+async function ContactContent(): Promise<JSX.Element> {
+  /* Const */
+  const site = await safeApi(() => GetSiteContent(), null);
+  const settings = site?.settings;
+
+  const phone = settings?.phone || "09134588060";
+  const email = settings?.email || "etemaddane@gmail.com";
+  const address = settings?.address || "یزد، شهرک صنعتی یزد مهر";
+  const mapsUrl = settings?.maps_url || "https://maps.google.com/?q=شهرک+صنعتی+یزد+مهر";
+  const instagramUrl = settings?.instagram_url || "https://instagram.com/etemaddane";
+  const igHandle = instagramHandle(instagramUrl) || "etemaddane";
+
   return (
     <>
       <section className="detail-hero">
@@ -31,9 +49,9 @@ export default function ContactPage(): JSX.Element {
           <div className="contact-list">
             <ContactRow
               isLtr
-              href="tel:+989134588060"
+              href={formatPhoneTel(phone)}
               label="تلفن"
-              value="0913 458 8060"
+              value={formatPhoneDisplay(phone)}
               icon={
                 <svg
                   fill="none"
@@ -51,9 +69,9 @@ export default function ContactPage(): JSX.Element {
             />
             <ContactRow
               isLtr
-              href="mailto:etemaddane@gmail.com"
+              href={`mailto:${email}`}
               label="ایمیل"
-              value="etemaddane@gmail.com"
+              value={email}
               icon={
                 <svg
                   fill="none"
@@ -71,9 +89,9 @@ export default function ContactPage(): JSX.Element {
               }
             />
             <ContactRow
-              href="https://maps.google.com/?q=شهرک+صنعتی+یزد+مهر"
+              href={mapsUrl}
               label="آدرس"
-              value="یزد، شهرک صنعتی یزد مهر"
+              value={address}
               icon={
                 <svg
                   fill="none"
@@ -92,9 +110,9 @@ export default function ContactPage(): JSX.Element {
             />
             <ContactRow
               isLtr
-              href="https://instagram.com/etemaddane"
+              href={instagramUrl}
               label="اینستاگرام"
-              value="etemaddane"
+              value={igHandle}
               icon={
                 <svg
                   fill="none"
@@ -113,8 +131,34 @@ export default function ContactPage(): JSX.Element {
               }
             />
           </div>
+
+          <div className="inquiry-section">
+            <h2>درخواست سفارش یا استعلام قیمت</h2>
+            <p>فرم زیر را پر کنید تا کارشناسان ما با شما تماس بگیرند.</p>
+            <InquiryForm />
+          </div>
         </div>
       </section>
     </>
+  );
+}
+
+/**
+ * صفحه تماس با ما
+ */
+export default function ContactPage(): JSX.Element {
+  return (
+    <Suspense
+      fallback={
+        <section className="detail-hero">
+          <div className="wrap detail-hero-inner">
+            <p className="section-tag">تماس با ما</p>
+            <h1>راه‌های ارتباطی</h1>
+          </div>
+        </section>
+      }
+    >
+      <ContactContent />
+    </Suspense>
   );
 }

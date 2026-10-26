@@ -1,26 +1,43 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { formatPhoneDisplay, formatPhoneTel, instagramHandle } from "@/utils/formatPhone";
+
 import type { TFooterProps } from "./Footer.type";
+
+const DEFAULT_CONTACT = {
+  companyName: "اعتماد دانه شیر کوه",
+  address: "یزد، شهرک صنعتی یزد مهر",
+  phone: "09134588060",
+  email: "etemaddane@gmail.com",
+  instagramUrl: "https://instagram.com/etemaddane",
+} as const;
 
 /**
  * فوتر اصلی سایت اعتماد دانه
  */
-export function Footer({ className }: TFooterProps): JSX.Element {
+export function Footer({ className, contact }: TFooterProps): JSX.Element {
+  const companyName = contact?.companyName || DEFAULT_CONTACT.companyName;
+  const address = contact?.address || DEFAULT_CONTACT.address;
+  const phone = contact?.phone || DEFAULT_CONTACT.phone;
+  const email = contact?.email || DEFAULT_CONTACT.email;
+  const instagramUrl = contact?.instagramUrl || DEFAULT_CONTACT.instagramUrl;
+  const igHandle = instagramHandle(instagramUrl) || "etemaddane";
+
   return (
     <footer className={`site-footer ${className || ""}`}>
       <div className="wrap footer-grid">
         <div className="footer-brand">
           <Image
-            alt="نشان اعتماد دانه شیر کوه"
+            alt={`نشان ${companyName}`}
             className="footer-logo-img"
             height={64}
             src="/logo.png"
             width={90}
           />
           <div>
-            <h4>اعتماد دانه شیر کوه</h4>
-            <p>یزد، شهرک صنعتی یزد مهر</p>
+            <h4>{companyName}</h4>
+            <p>{address}</p>
           </div>
         </div>
 
@@ -34,7 +51,7 @@ export function Footer({ className }: TFooterProps): JSX.Element {
 
         <div className="footer-col">
           <h5>ارتباط با ما</h5>
-          <a className="footer-contact-link" href="tel:+989134588060">
+          <a className="footer-contact-link" href={formatPhoneTel(phone)}>
             <svg
               fill="none"
               height="15"
@@ -47,9 +64,9 @@ export function Footer({ className }: TFooterProps): JSX.Element {
             >
               <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
             </svg>
-            <span className="ltr">0913 458 8060</span>
+            <span className="ltr">{formatPhoneDisplay(phone)}</span>
           </a>
-          <a className="footer-contact-link" href="mailto:etemaddane@gmail.com">
+          <a className="footer-contact-link" href={`mailto:${email}`}>
             <svg
               fill="none"
               height="15"
@@ -63,11 +80,11 @@ export function Footer({ className }: TFooterProps): JSX.Element {
               <rect height="16" rx="2" width="20" x="2" y="4" />
               <path d="m22 6-10 7L2 6" />
             </svg>
-            <span className="ltr">etemaddane@gmail.com</span>
+            <span className="ltr">{email}</span>
           </a>
           <a
             className="footer-contact-link"
-            href="https://instagram.com/etemaddane"
+            href={instagramUrl}
             rel="noopener noreferrer"
             target="_blank"
           >
@@ -85,13 +102,13 @@ export function Footer({ className }: TFooterProps): JSX.Element {
               <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
               <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
             </svg>
-            <span className="ltr">etemaddane</span>
+            <span className="ltr">{igHandle}</span>
           </a>
         </div>
       </div>
 
       <div className="wrap footer-bottom">
-        <span>© ۱۴۰۵ اعتماد دانه شیر کوه · یزد</span>
+        <span>© ۱۴۰۵ {companyName} · یزد</span>
       </div>
     </footer>
   );

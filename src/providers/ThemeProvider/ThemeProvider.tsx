@@ -4,7 +4,8 @@ import {
   createContext,
   useCallback,
   useContext,
-  useSyncExternalStore,
+  useEffect,
+  useState,
 } from "react";
 
 import type {
@@ -19,16 +20,7 @@ const STORAGE_KEY = "edsk-theme";
 
 const THEME_CHANGE_EVENT = "edsk-theme-change";
 
-function subscribe(callback: () => void) {
-  window.addEventListener("storage", callback);
-  window.addEventListener(THEME_CHANGE_EVENT, callback);
-  return () => {
-    window.removeEventListener("storage", callback);
-    window.removeEventListener(THEME_CHANGE_EVENT, callback);
-  };
-}
-
-function getSnapshot(): TTheme {
+function readTheme(): TTheme {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored === "dark" || stored === "light") {
@@ -43,16 +35,26 @@ function getSnapshot(): TTheme {
   return "light";
 }
 
-function getServerSnapshot(): TTheme {
-  return "light";
-}
-
 /**
  * مدیریت تم تیره و روشن سایت
  */
-export function ThemeProvider({ children }: TThemeProviderProps) {
+export function ThemeProvider({ children }: TThemeProviderProps): JSX.Element {
   /* State */
-  const theme = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const [theme, setThemeState] = useState<TTheme>("light");
+
+  /* Effects */
+  useEffect(() => {
+    setThemeState(readTheme());
+
+    const onChange = () => setThemeState(readTheme());
+    window.addEventListener("storage", onChange);
+    window.addEventListener(THEME_CHANGE_EVENT, onChange);
+
+    return () => {
+      window.removeEventListener("storage", onChange);
+      window.removeEventListener(THEME_CHANGE_EVENT, onChange);
+    };
+  }, []);
 
   /* Function */
   const applyTheme = useCallback((nextTheme: TTheme) => {
@@ -74,7 +76,7 @@ export function ThemeProvider({ children }: TThemeProviderProps) {
     (nextTheme: TTheme) => {
       applyTheme(nextTheme);
     },
-    [applyTheme]
+    [applyTheme],
   );
 
   return (

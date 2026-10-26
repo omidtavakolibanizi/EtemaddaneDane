@@ -19,6 +19,14 @@
       }
     ],
     "paths": {
+      "@/components/*": ["./src/components/*"],
+      "@/endpoints/*": ["./src/endpoints/*"],
+      "@/providers/*": ["./src/providers/*"],
+      "@/utils/*": ["./src/utils/*"],
+      "@/hooks/*": ["./src/hooks/*"],
+      "@/forms/*": ["./src/forms/*"],
+      "@/public/*": ["./public/*"],
+      "@/src/*": ["./src/*"],
       "@/*": ["./src/*"]
     }
   },

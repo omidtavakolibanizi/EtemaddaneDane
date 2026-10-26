@@ -1,4 +1,11 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
+
+import { GetCatalogCategories, GetCatalogProducts } from "@/endpoints/Catalog";
+import { GetSiteContent } from "@/endpoints/Site";
+import { FALLBACK_PRODUCTS } from "@/data/fallbackProducts";
+import { formatPhoneTel } from "@/utils/formatPhone";
+import { safeApi } from "@/utils/safeApi";
 
 import CtaBand from "@/components/CtaBand";
 import ProductCard from "@/components/ProductCard";
@@ -8,49 +15,27 @@ export const metadata: Metadata = {
   description: "محصولات اعتماد دانه — خوراک باکیفیت دام سنگین و سبک، و خوراک پرورشی طیور",
 };
 
-const PRODUCTS = [
-  {
-    title: "خوراک گاو",
-    description: "فرمول متعادل برای رشد، شیر و سلامت دام سنگین",
-    href: "/product-cow",
-    imageSrc: "/images/product-cow.jpg",
-  },
-  {
-    title: "خوراک گوسفند",
-    description: "تغذیه علمی برای گله‌های سبک و بازدهی بهتر",
-    href: "/products",
-    imageSrc: "/images/product-sheep.jpg",
-  },
-  {
-    title: "خوراک طیور",
-    description: "رشد یکنواخت و سلامت گله‌های مرغ و طیور",
-    href: "/product-poultry",
-    imageSrc: "/images/product-poultry.jpg",
-  },
-  {
-    title: "خوراک آبزیان",
-    description: "فرمول‌های مناسب پرورش ماهی و آبزیان",
-    href: "/products",
-    imageSrc: "/images/product-fish.jpg",
-  },
-  {
-    title: "خوراک حیوانات خانگی",
-    description: "تغذیه کامل برای سگ و گربه با مواد مغذی",
-    href: "/products",
-    imageSrc: "/images/product-pets.jpg",
-  },
-  {
-    title: "خوراک شتر",
-    description: "ترکیب تخصصی متناسب با نیاز دام شتر",
-    href: "/products",
-    imageSrc: "/images/product-camel.jpg",
-  },
-] as const;
+async function ProductsContent(): Promise<JSX.Element> {
+  /* Const */
+  const [products, categories, site] = await Promise.all([
+    safeApi(() => GetCatalogProducts(), null),
+    safeApi(() => GetCatalogCategories(), []),
+    safeApi(() => GetSiteContent(), null),
+  ]);
 
-/**
- * صفحه لیست محصولات
- */
-export default function ProductsPage(): JSX.Element {
+  const apiProducts =
+    products?.results?.map((product) => ({
+      title: product.name,
+      description: product.short_description || product.category.name,
+      href: `/products/${product.slug}`,
+      imageSrc: product.image || "/images/product-cow.jpg",
+      imageAlt: product.image_alt || product.name,
+    })) || [];
+
+  const displayProducts = apiProducts.length > 0 ? apiProducts : FALLBACK_PRODUCTS;
+  const phone = site?.settings.phone || "09134588060";
+  const instagramUrl = site?.settings.instagram_url || "https://instagram.com/etemaddane";
+
   return (
     <>
       <section className="page-hero">
@@ -58,18 +43,23 @@ export default function ProductsPage(): JSX.Element {
           <p className="eyebrow">محصولات</p>
           <h1>خوراک دام و طیور</h1>
           <p>مجموعه محصولات اعتماد دانه با فرمولاسیون علمی و مواد اولیه باکیفیت</p>
+          {categories.length > 0 ? (
+            <p className="products-categories">
+              {categories.map((category) => category.name).join(" · ")}
+            </p>
+          ) : null}
         </div>
       </section>
 
       <section style={{ paddingTop: 0 }}>
         <div className="wrap">
           <div className="product-grid product-grid-6">
-            {PRODUCTS.map((product) => (
+            {displayProducts.map((product) => (
               <ProductCard
                 key={product.title}
                 description={product.description}
                 href={product.href}
-                imageAlt={product.title}
+                imageAlt={"imageAlt" in product ? product.imageAlt : product.title}
                 imageSrc={product.imageSrc}
                 title={product.title}
               />
@@ -85,7 +75,7 @@ export default function ProductsPage(): JSX.Element {
             title="برای سفارش محصولات با ما تماس بگیرید"
             actions={
               <>
-                <a className="btn btn-primary" href="tel:+989134588060">
+                <a className="btn btn-primary" href={formatPhoneTel(phone)}>
                   <svg
                     fill="none"
                     height="16"
@@ -102,7 +92,7 @@ export default function ProductsPage(): JSX.Element {
                 </a>
                 <a
                   className="btn btn-ghost"
-                  href="https://instagram.com/etemaddane"
+                  href={instagramUrl}
                   rel="noopener noreferrer"
                   target="_blank"
                 >
@@ -114,5 +104,25 @@ export default function ProductsPage(): JSX.Element {
         </div>
       </section>
     </>
+  );
+}
+
+/**
+ * صفحه لیست محصولات
+ */
+export default function ProductsPage(): JSX.Element {
+  return (
+    <Suspense
+      fallback={
+        <section className="page-hero">
+          <div className="wrap">
+            <p className="eyebrow">محصولات</p>
+            <h1>خوراک دام و طیور</h1>
+          </div>
+        </section>
+      }
+    >
+      <ProductsContent />
+    </Suspense>
   );
 }

@@ -1700,6 +1700,87 @@ h1.hero-title {
   }
 }
 
+/* ---------- Inquiry form ---------- */
+.inquiry-section {
+  margin-top: 2.5rem;
+  padding: 1.75rem 1.5rem;
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow);
+}
+
+.inquiry-section h2 {
+  margin: 0 0 0.4rem;
+  font-size: 1.35rem;
+}
+
+.inquiry-section > p {
+  margin: 0 0 1.25rem;
+  color: var(--ink-muted);
+}
+
+.inquiry-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.inquiry-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  color: var(--ink-muted);
+}
+
+.inquiry-field-full {
+  grid-column: 1 / -1;
+}
+
+.inquiry-field input,
+.inquiry-field textarea {
+  width: 100%;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--bg);
+  color: var(--ink);
+  font: inherit;
+}
+
+.inquiry-field input:focus-visible,
+.inquiry-field textarea:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.inquiry-feedback {
+  margin: 0 0 1rem;
+  font-size: 0.92rem;
+}
+
+.inquiry-feedback.is-success {
+  color: var(--primary);
+}
+
+.inquiry-feedback.is-error {
+  color: #b42318;
+}
+
+.products-categories {
+  margin-top: 0.75rem;
+  color: var(--ink-muted);
+  font-size: 0.95rem;
+}
+
+@media (max-width: 700px) {
+  .inquiry-form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .home-hero-copy {
     animation: none;

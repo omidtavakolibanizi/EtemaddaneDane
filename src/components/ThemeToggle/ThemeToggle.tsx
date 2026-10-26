@@ -1,24 +1,25 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
+import { useEffect, useState } from "react";
 
 import { useTheme } from "@/providers/ThemeProvider";
 
 import type { TThemeToggleProps } from "./ThemeToggle.type";
 
-const emptySubscribe = () => () => {};
-
 /**
  * دکمه تعویض پوسته روشن / تیره
  */
 export function ThemeToggle({ className }: TThemeToggleProps): JSX.Element {
-  /* State */
+  /* Store */
   const { theme, toggleTheme } = useTheme();
-  const isClient = useSyncExternalStore(
-    emptySubscribe,
-    () => true,
-    () => false
-  );
+
+  /* State */
+  const [isClient, setIsClient] = useState(false);
+
+  /* Effects */
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   /* Const */
   const isDark = isClient && theme === "dark";

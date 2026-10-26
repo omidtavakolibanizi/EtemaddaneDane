@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Vazirmatn } from "next/font/google";
 
 import ThemeProvider from "@/providers/ThemeProvider";
 
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+
+import SiteFooter from "./_components/SiteFooter";
 
 import "./globals.css";
 
@@ -55,6 +58,9 @@ const jsonLd = {
   sameAs: ["https://instagram.com/etemaddane"],
 };
 
+/**
+ * Layout ریشه سایت
+ */
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -79,7 +85,9 @@ export default function RootLayout({
         <ThemeProvider>
           <Header />
           <main>{children}</main>
-          <Footer />
+          <Suspense fallback={<Footer />}>
+            <SiteFooter />
+          </Suspense>
         </ThemeProvider>
       </body>
     </html>
