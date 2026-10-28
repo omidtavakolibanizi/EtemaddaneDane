@@ -13,6 +13,12 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      { source: "/product-cow", destination: "/products/cow", permanent: true },
+      { source: "/product-poultry", destination: "/products/poultry", permanent: true },
+    ];
+  },
   turbopack: {
     root: process.cwd(),
     rules: {

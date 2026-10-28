@@ -1,7 +1,3 @@
-import { FALLBACK_PRODUCTS } from "@/data/fallbackProducts";
-
-export { FALLBACK_PRODUCTS };
-
 export const HOME_STAT_ICONS = [
   {
     key: "factory",

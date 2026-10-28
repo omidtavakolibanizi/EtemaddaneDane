@@ -16,11 +16,7 @@ export function Header({ className }: THeaderProps): JSX.Element {
   const pathname = usePathname();
 
   /* Const */
-  const isProductsActive =
-    pathname === "/products" ||
-    pathname.startsWith("/products/") ||
-    pathname === "/product-cow" ||
-    pathname === "/product-poultry";
+  const isProductsActive = pathname === "/products" || pathname.startsWith("/products/");
 
   return (
     <header className={`site-header ${className || ""}`}>

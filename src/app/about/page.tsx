@@ -1,15 +1,37 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+
+import { GetSiteContent } from "@/endpoints/Site";
+import { safeApi } from "@/utils/safeApi";
 
 import BadgeItem from "@/components/BadgeItem";
 import CtaBand from "@/components/CtaBand";
 import StatsBand from "@/components/StatsBand";
 
+import { HOME_STAT_ICONS } from "@/app/page.const";
+
 export const metadata: Metadata = {
   title: "درباره ما",
   description: "درباره اعتماد دانه شیر کوه — تأمین دانه و خوراک دام و طیور در شهرک صنعتی یزد مهر",
 };
+
+async function AboutStats(): Promise<JSX.Element | null> {
+  /* Const */
+  const site = await safeApi(() => GetSiteContent(), null);
+  if (!site?.stats?.length) {
+    return null;
+  }
+
+  const stats = site.stats.map((item, index) => ({
+    value: item.value,
+    label: item.label,
+    icon: HOME_STAT_ICONS[index % HOME_STAT_ICONS.length].icon,
+  }));
+
+  return <StatsBand items={stats} />;
+}
 
 /**
  * صفحه درباره ما
@@ -107,7 +129,9 @@ export default function AboutPage(): JSX.Element {
         </div>
       </section>
 
-      <StatsBand />
+      <Suspense fallback={null}>
+        <AboutStats />
+      </Suspense>
 
       <section>
         <div className="wrap">

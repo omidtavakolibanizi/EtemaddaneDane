@@ -1,24 +1,25 @@
-import type { Metadata } from "next";
 import { Suspense } from "react";
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { GetCatalogProducts } from "@/endpoints/Catalog";
 import { GetSiteContent } from "@/endpoints/Site";
-import { safeApi } from "@/utils/safeApi";
 
 import AboutPreview from "@/components/AboutPreview";
 import HeroSection from "@/components/HeroSection";
 import ProductCard from "@/components/ProductCard";
 import StatsBand from "@/components/StatsBand";
 
-import { FALLBACK_PRODUCTS, HOME_STAT_ICONS } from "./page.const";
+import { safeApi } from "@/utils/safeApi";
+
+import { HOME_STAT_ICONS } from "./page.const";
 
 export const metadata: Metadata = {
   title: "اعتماد دانه | تأمین‌کننده دانه و خوراک دام و طیور",
   description: "اعتماد دانه — تأمین‌کننده دانه و خوراک دام و طیور، یزد، شهرک صنعتی یزد مهر",
 };
 
-async function HomeHero(): Promise<JSX.Element> {
+async function HomeHero(): Promise<JSX.Element | null> {
   /* Const */
   const site = await safeApi(() => GetSiteContent(), null);
   const heroSlides =
@@ -31,22 +32,24 @@ async function HomeHero(): Promise<JSX.Element> {
         alt: slide.alt || slide.title,
       })) || [];
 
-  return <HeroSection slides={heroSlides.length > 0 ? heroSlides : undefined} />;
+  if (heroSlides.length === 0) {
+    return null;
+  }
+
+  return <HeroSection slides={heroSlides} />;
 }
 
 async function HomeProducts(): Promise<JSX.Element> {
   /* Const */
   const products = await safeApi(() => GetCatalogProducts(), null);
-  const apiProducts =
+  const displayProducts =
     products?.results?.map((product) => ({
       title: product.name,
       description: product.short_description || product.category.name,
       href: `/products/${product.slug}`,
-      imageSrc: product.image || "/images/product-cow.jpg",
+      imageSrc: product.image || undefined,
       imageAlt: product.image_alt || product.name,
     })) || [];
-
-  const displayProducts = apiProducts.length > 0 ? apiProducts : FALLBACK_PRODUCTS;
 
   return (
     <section className="products-section" id="products">
@@ -71,18 +74,22 @@ async function HomeProducts(): Promise<JSX.Element> {
           <p>خوراک دام و طیور با فرمولاسیون علمی، متناسب با هر مرحله رشد و نوع پرورش</p>
         </div>
 
-        <div className="product-grid product-grid-6">
-          {displayProducts.map((product) => (
-            <ProductCard
-              key={product.title}
-              description={product.description}
-              href={product.href}
-              imageAlt={"imageAlt" in product ? product.imageAlt : product.title}
-              imageSrc={product.imageSrc}
-              title={product.title}
-            />
-          ))}
-        </div>
+        {displayProducts.length > 0 ? (
+          <div className="product-grid product-grid-6">
+            {displayProducts.map((product) => (
+              <ProductCard
+                key={product.title}
+                description={product.description}
+                href={product.href}
+                imageAlt={product.imageAlt}
+                imageSrc={product.imageSrc}
+                title={product.title}
+              />
+            ))}
+          </div>
+        ) : (
+          <p className="products-empty">در حال حاضر محصولی برای نمایش وجود ندارد.</p>
+        )}
 
         <div className="section-cta">
           <Link className="btn btn-primary" href="/products">
@@ -106,16 +113,18 @@ async function HomeProducts(): Promise<JSX.Element> {
   );
 }
 
-async function HomeStats(): Promise<JSX.Element> {
+async function HomeStats(): Promise<JSX.Element | null> {
   /* Const */
   const site = await safeApi(() => GetSiteContent(), null);
-  const stats = site?.stats?.length
-    ? site.stats.map((item, index) => ({
-        value: item.value,
-        label: item.label,
-        icon: HOME_STAT_ICONS[index % HOME_STAT_ICONS.length].icon,
-      }))
-    : undefined;
+  if (!site?.stats?.length) {
+    return null;
+  }
+
+  const stats = site.stats.map((item, index) => ({
+    value: item.value,
+    label: item.label,
+    icon: HOME_STAT_ICONS[index % HOME_STAT_ICONS.length].icon,
+  }));
 
   return <StatsBand items={stats} />;
 }
@@ -126,7 +135,7 @@ async function HomeStats(): Promise<JSX.Element> {
 export default function HomePage(): JSX.Element {
   return (
     <>
-      <Suspense fallback={<HeroSection />}>
+      <Suspense fallback={null}>
         <HomeHero />
       </Suspense>
 
@@ -134,17 +143,9 @@ export default function HomePage(): JSX.Element {
         fallback={
           <section className="products-section" id="products">
             <div className="wrap">
-              <div className="product-grid product-grid-6">
-                {FALLBACK_PRODUCTS.map((product) => (
-                  <ProductCard
-                    key={product.title}
-                    description={product.description}
-                    href={product.href}
-                    imageAlt={product.title}
-                    imageSrc={product.imageSrc}
-                    title={product.title}
-                  />
-                ))}
+              <div className="section-head">
+                <h2>محصولات ما</h2>
+                <p>در حال بارگذاری...</p>
               </div>
             </div>
           </section>
@@ -153,7 +154,7 @@ export default function HomePage(): JSX.Element {
         <HomeProducts />
       </Suspense>
 
-      <Suspense fallback={<StatsBand />}>
+      <Suspense fallback={null}>
         <HomeStats />
       </Suspense>
 

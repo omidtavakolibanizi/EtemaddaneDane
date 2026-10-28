@@ -6,29 +6,6 @@ import Link from "next/link";
 
 import type { THeroSectionProps } from "./HeroSection.type";
 
-const SLIDES = [
-  {
-    image: "/images/hero-factory.jpg",
-    title: "بزرگ‌ترین و به‌روزترین کارخانه خوراک دام و طیور یزد",
-    subtitle:
-      "با بهره‌گیری از فناوری‌های پیشرفته، خوراکی سالم و مغذی برای رشد و سلامت دام و طیور شما تولید می‌کنیم.",
-    alt: "نمای کارخانه تولید خوراک دام و طیور اعتماد دانه",
-  },
-  {
-    image: "/images/hero-factory-2.jpg",
-    title: "تولید خوراک با استانداردهای ملی و کیفیت تضمین‌شده",
-    subtitle:
-      "از انتخاب مواد اولیه تا بسته‌بندی نهایی، هر مرحله زیر نظارت دقیق کنترل کیفیت انجام می‌شود.",
-    alt: "سیلوها و خطوط تولید کارخانه اعتماد دانه",
-  },
-  {
-    image: "/images/hero-factory-3.jpg",
-    title: "همراه مطمئن دامداران و مرغداران سراسر کشور",
-    subtitle: "تحویل منظم، مشاوره تخصصی و پشتیبانی مستقیم برای انتخاب بهترین خوراک گله شما.",
-    alt: "انبار و محصولات خوراک دام و طیور اعتماد دانه",
-  },
-] as const;
-
 const FEATURES = [
   {
     title: "کیفیت برتر",
@@ -91,17 +68,21 @@ const FEATURES = [
 ] as const;
 
 /**
- * بخش هیرو صفحه اصلی با اسلایدر و CTA
+ * بخش هیرو صفحه اصلی با اسلایدر و CTA — اسلایدها فقط از API
  */
-export function HeroSection({ className, slides }: THeroSectionProps): JSX.Element {
+export function HeroSection({ className, slides }: THeroSectionProps): JSX.Element | null {
   /* Const */
-  const slideItems = slides?.length ? slides : SLIDES;
+  const slideItems = slides?.length ? slides : [];
 
   /* States */
   const [active, setActive] = useState(0);
 
   /* Effects */
   useEffect(() => {
+    if (slideItems.length <= 1) {
+      return;
+    }
+
     const timer = window.setInterval(() => {
       setActive((prev) => (prev + 1) % slideItems.length);
     }, 5500);
@@ -111,6 +92,10 @@ export function HeroSection({ className, slides }: THeroSectionProps): JSX.Eleme
 
   /* Const */
   const slide = slideItems[active] || slideItems[0];
+
+  if (!slide) {
+    return null;
+  }
 
   return (
     <section className={`home-hero ${className || ""}`}>

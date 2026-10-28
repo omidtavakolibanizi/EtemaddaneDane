@@ -3,6 +3,7 @@ import { cacheLife } from "next/cache";
 import { AXIOS } from "@/utils/axiosInstance";
 
 import type { TProductListItem } from "../../Catalog.type";
+
 import type {
   TGetCatalogProductsRequest,
   TGetCatalogProductsResponse,

@@ -1,7 +1,8 @@
 import { GetSiteContent } from "@/endpoints/Site";
-import { safeApi } from "@/utils/safeApi";
 
 import Footer from "@/components/Footer";
+
+import { safeApi } from "@/utils/safeApi";
 
 /**
  * فوتر متصل به API محتوای سایت

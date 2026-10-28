@@ -1,8 +1,8 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Suspense } from "react";
 
 import { GetCatalogProduct, GetCatalogProducts } from "@/endpoints/Catalog";
 
@@ -46,9 +46,7 @@ export async function generateMetadata({ params }: TProductPageProps): Promise<M
   }
 }
 
-async function ProductDetailContent({
-  params,
-}: TProductPageProps): Promise<JSX.Element> {
+async function ProductDetailContent({ params }: TProductPageProps): Promise<JSX.Element> {
   /* Const */
   const { slug } = await params;
 
@@ -65,31 +63,16 @@ async function ProductDetailContent({
 
   const features = product.features.filter((item) => !item.kind || item.kind === "feature");
   const specs = product.features.filter((item) => item.kind === "spec");
-  const imageSrc = product.image || "/images/product-cow.jpg";
+  const imageSrc = product.image || undefined;
 
   return (
     <>
       <section className="detail-hero">
         <div className="detail-hero-media">
-          <Image fill priority alt="" sizes="100vw" src="/images/hero-factory-2.jpg" />
+          {imageSrc ? <Image fill priority alt="" sizes="100vw" src={imageSrc} /> : null}
           <div className="detail-hero-overlay" />
         </div>
         <div className="wrap detail-hero-inner">
-          <Link className="back-link" href="/products">
-            <svg
-              fill="none"
-              height="14"
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-              width="14"
-            >
-              <path d="M15 18l-6-6 6-6" />
-            </svg>
-            بازگشت به محصولات
-          </Link>
           <p className="section-tag">{product.category.name}</p>
           <h1>{product.name}</h1>
           {product.short_description ? <p>{product.short_description}</p> : null}
@@ -98,14 +81,16 @@ async function ProductDetailContent({
 
       <section>
         <div className="wrap detail-layout">
-          <div className="detail-media">
-            <Image
-              fill
-              alt={product.image_alt || product.name}
-              sizes="(max-width: 900px) 100vw, 50vw"
-              src={imageSrc}
-            />
-          </div>
+          {imageSrc ? (
+            <div className="detail-media">
+              <Image
+                fill
+                alt={product.image_alt || product.name}
+                sizes="(max-width: 900px) 100vw, 50vw"
+                src={imageSrc}
+              />
+            </div>
+          ) : null}
           <div className="detail-copy">
             <h2>{product.name}</h2>
             {product.description ? <p>{product.description}</p> : null}

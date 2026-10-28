@@ -1,6 +1,6 @@
-import type { Metadata } from "next";
 import { Suspense } from "react";
-import { Vazirmatn } from "next/font/google";
+import type { Metadata } from "next";
+import localFont from "next/font/local";
 
 import ThemeProvider from "@/providers/ThemeProvider";
 
@@ -11,9 +11,15 @@ import SiteFooter from "./_components/SiteFooter";
 
 import "./globals.css";
 
-const vazirmatn = Vazirmatn({
-  subsets: ["arabic", "latin"],
-  weight: ["400", "500", "600", "700", "800", "900"],
+const vazirmatn = localFont({
+  src: [
+    { path: "../fonts/Vazirmatn-Regular.woff2", weight: "400", style: "normal" },
+    { path: "../fonts/Vazirmatn-Medium.woff2", weight: "500", style: "normal" },
+    { path: "../fonts/Vazirmatn-SemiBold.woff2", weight: "600", style: "normal" },
+    { path: "../fonts/Vazirmatn-Bold.woff2", weight: "700", style: "normal" },
+    { path: "../fonts/Vazirmatn-ExtraBold.woff2", weight: "800", style: "normal" },
+    { path: "../fonts/Vazirmatn-Black.woff2", weight: "900", style: "normal" },
+  ],
   display: "swap",
   variable: "--font-vazirmatn",
 });
@@ -23,8 +29,7 @@ export const metadata: Metadata = {
     default: "اعتماد دانه | تأمین‌کننده دانه و خوراک دام و طیور",
     template: "%s | اعتماد دانه",
   },
-  description:
-    "اعتماد دانه شیر کوه — تأمین‌کننده دانه و خوراک دام و طیور، یزد، شهرک صنعتی یزد مهر",
+  description: "اعتماد دانه شیر کوه — تأمین‌کننده دانه و خوراک دام و طیور، یزد، شهرک صنعتی یزد مهر",
   keywords: [
     "اعتماد دانه",
     "خوراک دام",
