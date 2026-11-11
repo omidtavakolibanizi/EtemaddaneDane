@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useId, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -14,9 +15,33 @@ import type { THeaderProps } from "./Header.type";
 export function Header({ className }: THeaderProps): JSX.Element {
   /* Next */
   const pathname = usePathname();
+  const menuId = useId();
+
+  /* States */
+  const [menuOpen, setMenuOpen] = useState(false);
 
   /* Const */
   const isProductsActive = pathname === "/products" || pathname.startsWith("/products/");
+
+  /* Effects */
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!menuOpen) {
+      return;
+    }
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setMenuOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [menuOpen]);
 
   return (
     <header className={`site-header ${className || ""}`}>
@@ -32,7 +57,20 @@ export function Header({ className }: THeaderProps): JSX.Element {
           />
         </Link>
 
-        <ul className="nav-links">
+        <button
+          aria-controls={menuId}
+          aria-expanded={menuOpen}
+          aria-label={menuOpen ? "بستن منو" : "باز کردن منو"}
+          className={`nav-toggle ${menuOpen ? "is-open" : ""}`}
+          type="button"
+          onClick={() => setMenuOpen((open) => !open)}
+        >
+          <span aria-hidden="true" />
+          <span aria-hidden="true" />
+          <span aria-hidden="true" />
+        </button>
+
+        <ul className={`nav-links ${menuOpen ? "is-open" : ""}`} id={menuId}>
           <li>
             <Link aria-current={pathname === "/" ? "page" : undefined} href="/">
               صفحه اصلی

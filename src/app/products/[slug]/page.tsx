@@ -93,25 +93,72 @@ async function ProductDetailContent({ params }: TProductPageProps): Promise<JSX.
           ) : null}
           <div className="detail-copy">
             <h2>{product.name}</h2>
-            {product.description ? <p>{product.description}</p> : null}
+
+            {product.description ? (
+              <div className="detail-block">
+                <h3>توضیحات</h3>
+                <div className="detail-prose">
+                  {product.description
+                    .split(/\n{2,}/)
+                    .map((paragraph) => paragraph.trim())
+                    .filter(Boolean)
+                    .map((paragraph) => (
+                      <p key={paragraph}>{paragraph}</p>
+                    ))}
+                </div>
+              </div>
+            ) : null}
 
             {features.length > 0 ? (
-              <ul className="detail-features">
-                {features.map((feature) => (
-                  <li key={feature.text}>{feature.text}</li>
-                ))}
-              </ul>
+              <div className="detail-block">
+                <h3>ویژگی‌ها</h3>
+                <ul className="detail-list">
+                  {features.map((feature) => (
+                    <li key={feature.text}>
+                      <svg
+                        fill="none"
+                        height="18"
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        viewBox="0 0 24 24"
+                        width="18"
+                      >
+                        <path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" />
+                        <path d="m9 12 2 2 4-4" />
+                      </svg>
+                      {feature.text}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             ) : null}
 
             {specs.length > 0 ? (
-              <>
+              <div className="detail-block">
                 <h3>مشخصات</h3>
-                <ul className="detail-features">
+                <ul className="detail-specs">
                   {specs.map((spec) => (
-                    <li key={spec.text}>{spec.text}</li>
+                    <li key={spec.text}>
+                      <svg
+                        fill="none"
+                        height="18"
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        viewBox="0 0 24 24"
+                        width="18"
+                      >
+                        <path d="M9 11l3 3L22 4" />
+                        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+                      </svg>
+                      {spec.text}
+                    </li>
                   ))}
                 </ul>
-              </>
+              </div>
             ) : null}
           </div>
         </div>
